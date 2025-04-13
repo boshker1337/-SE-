@@ -708,12 +708,6 @@ create or replace package body resource_pkg as
             insert into access_restrictions (restriction_id, employee_id, restricted_employee_id ) 
                                      values (access_restrictions_seq.nextval, pEmployeeId, pRestrictedEmployeeId);
                       --LOG!!!!!!!!!!!!!!!!!!
-                      /*logger.info(
-                          p_message => 'добавлено ограничение доступа для конкретного сотрудника',
-                          p_scope => 'access_control',
-                          p_entity_type => 'employee',
-                          p_entity_id => pEmployeeId
-                      );*/
           end if;
         end;
       else
@@ -721,12 +715,6 @@ create or replace package body resource_pkg as
          where employee_id = pEmployeeId
            and restricted_employee_id = pRestrictedEmployeeId;
               --LOG!!!!!!!!!!!!!!!!!!
-              /*logger.info(
-                  p_message => 'удалено ограничение доступа для конкретного сотрудника',
-                  p_scope => 'access_control',
-                  p_entity_type => 'employee',
-                  p_entity_id => pEmployeeId
-              );*/
       end if;
     else
       -- устанавливаем или снимаем общий запрет доступа
@@ -735,26 +723,12 @@ create or replace package body resource_pkg as
              updated_at = systimestamp
        where employee_id = pEmployeeId;
           --LOG!!!!!!!!!!!!!!!!!!
-          /*logger.info(
-              p_message => 'обновлены настройки общего доступа: ' || 
-                          case when pRestrictAll = 1 then 'запрещен' else 'разрешен' end,
-              p_scope => 'access_control',
-              p_entity_type => 'employee',
-              p_entity_id => pEmployeeId
-          )*/
     end if;
       
     commit;
   exception
     when others then
         --LOG!!!!!!!!!!!!!!!!!!
-          /*logger.error(
-              p_message => 'ошибка при установке ограничений доступа: ' || sqlerrm,
-              p_scope => 'access_control',
-              p_entity_type => 'employee',
-              p_entity_id => pEmployeeId,
-              p_error_stack => dbms_utility.format_error_stack
-          );*/
       rollback;
       raise;
   end;
@@ -823,25 +797,11 @@ create or replace package body resource_pkg as
     delete from resource_access
      where access_id = pAccessId;
       --LOG!!!!!!!!!!!!!!!!!!
-      /*logger.info(
-          p_message => 'доступ отозван: ресурс ' || vAccessRec.resource_id || 
-                      ', сотрудник ' || vAccessRec.employee_id,
-          p_scope => 'access_control',
-          p_entity_type => 'resource',
-          p_entity_id => vAccessRec.resource_id
-      );*/
       
     commit;
   exception
     when others then
         --LOG!!!!!!!!!!!!!!!!!!
-          /*logger.error(
-              p_message => 'ошибка при отзыве доступа: ' || sqlerrm,
-              p_scope => 'access_control',
-              p_entity_type => 'resource_access',
-              p_entity_id => pAccessId,
-              p_error_stack => dbms_utility.format_error_stack
-          );*/
       rollback;
       raise;
   end;
@@ -879,13 +839,6 @@ create or replace package body resource_pkg as
   exception
     when others then
         --LOG!!!!!!!!!!!!!!!!!!
-          /*logger.error(
-              p_message => 'ошибка при проверке прав доступа: ' || sqlerrm,
-              p_scope => 'access_control',
-              p_entity_type => 'employee',
-              p_entity_id => pEmployeeId,
-              p_error_stack => dbms_utility.format_error_stack
-          );*/
       return false;
   end ;
 
