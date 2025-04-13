@@ -61,18 +61,18 @@ create or replace package resource_pkg as
     procedure attach_file(pResourceId in number, pFileName in varchar2, pFileSize in number, pFileType in varchar2,
                           pFileContent in blob, pEmployeeId in number, pFileId out number);
     
-    -- 7. Запрет доступа (общий или для конкретных сотрудников)
+    -- Запрет доступа (общий или для конкретных сотрудников)
     procedure restrict_access(pEmployeeId in number, -- ID сотрудника, который устанавливает ограничение
                               pRestrictAll in number, -- 1 - запретить всем, 0 - снять общий запрет
                               pRestrictedEmployeeId in number default null -- Конкретный сотрудник для запрета (Может реализовать списком?????)
     );
     
-    -- 8. Удаление предоставленного доступа
+    -- Удаление предоставленного доступа
     procedure revoke_granted_access(pAccessId in number,-- ID записи о доступе
                                     pRequestedBy in number -- ID сотрудника, который запрашивает отзыв
     );
     
-    -- 9. Проверка прав на управление доступом
+    -- Проверка прав на управление доступом
     function can_manage_access(pEmployeeId in number, -- ID сотрудника, который пытается управлять доступом
                                pTargetEmployeeId in number  -- ID сотрудника, к чьим ресурсам обращаются
     ) return boolean;
